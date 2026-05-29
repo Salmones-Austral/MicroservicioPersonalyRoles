@@ -15,8 +15,8 @@ public class PersonalyRoles {
 
     @Id
     @GeneratedValue(strategy=GenerationType.IDENTITY)
-    @Column(name="id_mrt")
-    private int idMrt;
+    @Column(name="id")
+    private int id;
 
     @Column(name="idPersonal",nullable=false, length = 20)
     private int idPersonal;

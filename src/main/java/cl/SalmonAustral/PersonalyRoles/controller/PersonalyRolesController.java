@@ -38,19 +38,16 @@ public class PersonalyRolesController {
         }
         
         @GetMapping
-        public ResponseEntity<List<PersonalyRoles>> listarPersonal() {
-                List<PersonalyRoles> personalyRoles = personalyRolesServices.getPersonalyRoles();
-                return ResponseEntity.ok(PersonalyRoles);
+        public List<PersonalyRoles> getPersonalyRoles() {
+                return this.personalyRolesServices.getAllPersonalyRoles();
         }
 
         @PostMapping
-        public ResponseEntity<Libro> agregarLibro(@Valid @RequestBody CreateLibroRequest request) {
-                // @Valid ejecuta validaciones Jakarta automáticamente
-                // Si falla → GlobalExceptionHandler.handleValidationErrors() retorna 400
-
-                Libro nuevoLibro = libroService.saveLibro(LibroMapper.toModel(request));
-                return ResponseEntity.status(HttpStatus.CREATED).body(nuevoLibro);
+        public PersonalyRoles setPersonalyRoles(@RequestBody PersonalyRoles personalyRoles) {
+            this.personalyRolesServices.setIdPersonal(personalyRoles);
+            return personalyRoles;
         }
+        
 
         @GetMapping("{id}")
         public ResponseEntity<Libro> buscarLibro(@PathVariable int id) {

@@ -19,7 +19,8 @@ public interface PersonalyRolesRepository extends JpaRepository<PersonalyRoles, 
     */
     List<PersonalyRoles> findByIdPersonal(String idPersonal);
 
-    default int totalEmpleados() {
-        return (int) this.count();
-    }
+    // Consulta nativa simple
+    @Query(value = "SELECT * FROM personalyRoles WHERE especialidad = :especialidad", nativeQuery = true)
+    List<PersonalyRoles> mostrarEspecialidad(@Param("especialidad") String especialidad);
+
 }

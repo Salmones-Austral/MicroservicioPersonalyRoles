@@ -25,5 +25,9 @@ public class PersonalyRolesServices {
     public void setIdPersonal(PersonalyRoles personalyRoles){
         personalRepo.save(personalyRoles);
     }
+    /*mostrar por especialidad || para despues
+    public PersonalyRoles getEspecialidad(String especialidad){
+        return personalRepo.mostrarEspecialidad();
+    }*/
 
 }
