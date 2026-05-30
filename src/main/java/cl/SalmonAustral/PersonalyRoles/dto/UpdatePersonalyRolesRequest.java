@@ -29,7 +29,7 @@ public record UpdatePersonalyRolesRequest (
     String apellidoMaterno,
 
     @Positive(message = "El telefono no puede estar vacío")
-    int telefono,
+    String telefono,
 
     @NotBlank(message = "El correo no puede estar vacía")
     String correo,

@@ -14,13 +14,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.reactive.function.client.WebClient;
-/*DTO
-import com.example.bibliotecaduoc.dto.CreateLibroRequest;
-import com.example.bibliotecaduoc.dto.UpdateLibroRequest;*/
+//DTO
+import cl.SalmonAustral.PersonalyRoles.dto.CreatePersonalyRolesRequest;
+import cl.SalmonAustral.PersonalyRoles.dto.UpdatePersonalyRolesRequest;
 /*EXEPTION
 import com.example.bibliotecaduoc.exception.ResourceNotFoundException;*/
-/*MAPPER
-import com.example.bibliotecaduoc.mapper.LibroMapper;*/
+//MAPPER
+import cl.SalmonAustral.PersonalyRoles.mapper.PersonalyRolesMapper;
+
 
 import cl.SalmonAustral.PersonalyRoles.model.PersonalyRoles;
 import cl.SalmonAustral.PersonalyRoles.services.PersonalyRolesServices;
@@ -41,54 +42,48 @@ public class PersonalyRolesController {
         public List<PersonalyRoles> getPersonalyRoles() {
                 return this.personalyRolesServices.getAllPersonalyRoles();
         }
-
+        //pasa del model al dto luego al mapper y termina siendo subido a la base de datos
+        //en teoria es para Crear los datos
         @PostMapping
-        public PersonalyRoles setPersonalyRoles(@RequestBody PersonalyRoles personalyRoles) {
-            this.personalyRolesServices.setIdPersonal(personalyRoles);
-            return personalyRoles;
+        public PersonalyRoles setPersonalyRolesCreate(@RequestBody CreatePersonalyRolesRequest createPersonal) {
+                PersonalyRoles personalyRoles = PersonalyRolesMapper.toPersonalyRolesCreate(createPersonal);
+                personalyRoles.getId();
+                personalyRoles.getIdPersonal();
+                personalyRoles.getRut();
+                personalyRoles.getDv();
+                personalyRoles.getEspecialidad();
+                personalyRoles.getPrimerNombre();
+                personalyRoles.getSegundoNombre();
+                personalyRoles.getApellidoPaterno();
+                personalyRoles.getApellidoMaterno();
+                personalyRoles.getTelefono();
+                personalyRoles.getCorreo();
+                personalyRoles.getDireccion();
+                this.personalyRolesServices.setIdPersonal(personalyRoles);
+                return personalyRoles;
         }
-        
-
-        @GetMapping("{id}")
-        public ResponseEntity<Libro> buscarLibro(@PathVariable int id) {
-                Libro libro = libroService.getLibroId(id);
-
-                if (libro == null) {
-
-                        throw new ResourceNotFoundException("Libro no encontrado para id: " + id);
-                }
-
-                return ResponseEntity.ok(libro);
+        /*pasa del model -> dto -> mapper -> controller termina siendo subido a la base de datos. es para Actualizar los datos. 
+        al ser un metodo que actualiza necesita si o si el dato identificador(id en este caso) y dentro del argumento, debiamos llamar al @PathVariable(id)*/
+        @PutMapping("/{id}")
+        public PersonalyRoles updatePersonalyRolesUpdate(
+                @PathVariable("id") int id,
+                @RequestBody UpdatePersonalyRolesRequest UpdatePersonal) {
+                PersonalyRoles personalyRoles = PersonalyRolesMapper.toPersonalyRolesUpdate(id, UpdatePersonal); //Argumentamos con los dos valores importantes
+                personalyRoles.getId();
+                personalyRoles.getIdPersonal();
+                personalyRoles.getRut();
+                personalyRoles.getDv();
+                personalyRoles.getEspecialidad();
+                personalyRoles.getPrimerNombre();
+                personalyRoles.getSegundoNombre();
+                personalyRoles.getApellidoPaterno();
+                personalyRoles.getApellidoMaterno();
+                personalyRoles.getTelefono();
+                personalyRoles.getCorreo();
+                personalyRoles.getDireccion();
+                this.personalyRolesServices.setIdPersonal(personalyRoles);
+                return personalyRoles;
         }
-
-        @PutMapping("{id}")
-        public ResponseEntity<Libro> actualizarLibro(@PathVariable int id,
-                        @Valid @RequestBody UpdateLibroRequest request) {
-                // El ID viene del path, no del body → evita ambigüedad
-                Libro libroActualizado = libroService.updateLibro(LibroMapper.toModel(id, request));
-                return ResponseEntity.ok(libroActualizado);
-        }
-
-        @DeleteMapping("{id}")
-        public ResponseEntity<Void> eliminarLibro(@PathVariable int id) {
-                libroService.deleteLibro(id);
-                return ResponseEntity.noContent().build(); // 204 No Content (estándar REST)
-        }
-
-        @GetMapping("/total")
-        public ResponseEntity<Integer> totalLibros() {
-                int total = libroService.totalLibrosV2();
-                return ResponseEntity.ok(total);
-        }
-
-        @GetMapping("/editorial/{editorial}")
-        public List<Libro> getporEditorial(@PathVariable String editorial) {
-                return libroService.obtenerPorEditorial(editorial);
-        }
-
-        @GetMapping("/editorial")
-        public List<Libro> getporEditorial2(@RequestParam String editorial) {
-                return libroService.obtenerPorEditorial(editorial);
-        }
+        //System.err.println(); Sirve solo para debuggear
 
 }
