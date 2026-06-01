@@ -85,5 +85,11 @@ public class PersonalyRolesController {
                 return personalyRoles;
         }
         //System.err.println(); Sirve solo para debuggear
+        //borrar por id
+        @DeleteMapping("/{id}")
+        public ResponseEntity<String> borrarPersonalyRoles(@PathVariable Integer id){
+                PersonalyRolesServices.borrarIdPersonal(id);
+                return ResponseEntity.noContent().build();
+        }       
 
 }

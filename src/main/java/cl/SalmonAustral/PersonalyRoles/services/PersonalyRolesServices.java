@@ -25,9 +25,14 @@ public class PersonalyRolesServices {
     public void setIdPersonal(PersonalyRoles personalyRoles){
         personalRepo.save(personalyRoles);
     }
-    /*mostrar por especialidad || para despues
-    public PersonalyRoles getEspecialidad(String especialidad){
-        return personalRepo.mostrarEspecialidad();
-    }*/
-
+    //###//
+    //borrar por id
+    public Integer borrarIdPersonal(Integer idPersonal){
+        personalRepo.deleteById(idPersonal);
+        return idPersonal;
+    }
+    //filtrar por especialidad
+    public List<PersonalyRoles> getEspecialidad(String especialidad){
+        return personalRepo.findByEspecialidad(especialidad);
+    }
 }

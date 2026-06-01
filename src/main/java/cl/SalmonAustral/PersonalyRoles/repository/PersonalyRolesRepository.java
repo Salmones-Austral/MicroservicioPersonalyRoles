@@ -21,6 +21,6 @@ public interface PersonalyRolesRepository extends JpaRepository<PersonalyRoles, 
 
     // Consulta nativa simple
     @Query(value = "SELECT * FROM personalyRoles WHERE especialidad = :especialidad", nativeQuery = true)
-    List<PersonalyRoles> mostrarEspecialidad(@Param("especialidad") String especialidad);
+    List<PersonalyRoles> findByEspecialidad(@Param("especialidad") String especialidad);
 
 }
