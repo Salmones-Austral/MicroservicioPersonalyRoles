@@ -7,32 +7,33 @@ import org.springframework.stereotype.Service;
 
 import cl.SalmonAustral.PersonalyRoles.model.PersonalyRoles;
 import cl.SalmonAustral.PersonalyRoles.repository.PersonalyRolesRepository;
+import cl.SalmonAustral.PersonalyRoles.exceptions.ResourceNotFoundException;
 
 @Service
 public class PersonalyRolesServices {
-    @Autowired
-    private PersonalyRolesRepository personalRepo;
-
-    //Retornar todo
-    public List<PersonalyRoles> getAllPersonalyRoles(){
-        return personalRepo.findAll();
+    @Autowired    
+    private PersonalyRolesRepository PersonalRepo;
+    //todo
+    public List<PersonalyRoles> getAllPersonalyRoles() {
+        return PersonalRepo.findAll();
     }
-    //retornar por id o nulo
-    public PersonalyRoles getIdPersonal(Integer idPersonal){
-        return personalRepo.findById(idPersonal).orElse(null);
+    //obtener id
+    public PersonalyRoles getIdPersonalyRoles(int id) {
+        return PersonalRepo.findById(id).orElse(null);
     }
     //guardar
-    public void setIdPersonal(PersonalyRoles personalyRoles){
-        personalRepo.save(personalyRoles);
+    public PersonalyRoles setPersonalyRoles(PersonalyRoles personalyRoles) {
+        return PersonalRepo.save(personalyRoles);
     }
-    //###//
-    //borrar por id
-    public Integer borrarIdPersonal(Integer idPersonal){
-        personalRepo.deleteById(idPersonal);
-        return idPersonal;
+    //actualizar
+    public PersonalyRoles updatePersonalyRoles(PersonalyRoles personalyRoles) {
+        if (!PersonalRepo.existsById(personalyRoles.getId())) {
+            throw new ResourceNotFoundException("Alimentacion no existe con id: " + personalyRoles.getId());
+        }
+        return PersonalRepo.save(personalyRoles);
     }
-    //filtrar por especialidad
-    public List<PersonalyRoles> getEspecialidad(String especialidad){
-        return personalRepo.findByEspecialidad(especialidad);
+    //eliminar
+    public void deleteIdPersonalyRoles(int id) {
+        PersonalRepo.deleteById(id);
     }
 }

@@ -1,24 +1,18 @@
 package cl.SalmonAustral.PersonalyRoles.controller;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.reactive.function.client.WebClient;
 //DTO
-import cl.SalmonAustral.PersonalyRoles.dto.CreatePersonalyRolesRequest;
-import cl.SalmonAustral.PersonalyRoles.dto.UpdatePersonalyRolesRequest;
-/*EXEPTION
-import com.example.bibliotecaduoc.exception.ResourceNotFoundException;*/
+import cl.SalmonAustral.PersonalyRoles.dto.*;
+
 //MAPPER
 import cl.SalmonAustral.PersonalyRoles.mapper.PersonalyRolesMapper;
 
@@ -31,65 +25,61 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api/v1/PersonalyRoles")
 public class PersonalyRolesController {
-
-        private  PersonalyRolesServices personalyRolesServices;
-
-        public PersonalyRolesController(PersonalyRolesServices personalyRolesServices) {
-                this.personalyRolesServices = personalyRolesServices;
+        private  PersonalyRolesServices personalyRolesSer;
+        private final WebClient webClient;
+        @Autowired
+        public PersonalyRolesController(PersonalyRolesServices personalyRolesSer, WebClient.Builder webClientBuilder) {
+                this.personalyRolesSer = personalyRolesSer;
+                this.webClient = webClientBuilder.build(); 
         }
-        
+        //todo
         @GetMapping
-        public List<PersonalyRoles> getPersonalyRoles() {
-                return this.personalyRolesServices.getAllPersonalyRoles();
+        public ResponseEntity<List<PersonalyRoles>> listarCriaderos() {
+                return ResponseEntity.ok(personalyRolesSer.getAllPersonalyRoles());
         }
-        //pasa del model al dto luego al mapper y termina siendo subido a la base de datos
-        //en teoria es para Crear los datos
-        @PostMapping
-        public PersonalyRoles setPersonalyRolesCreate(@RequestBody CreatePersonalyRolesRequest createPersonal) {
-                PersonalyRoles personalyRoles = PersonalyRolesMapper.toPersonalyRolesCreate(createPersonal);
-                personalyRoles.getId();
-                personalyRoles.getIdPersonal();
-                personalyRoles.getRut();
-                personalyRoles.getDv();
-                personalyRoles.getEspecialidad();
-                personalyRoles.getPrimerNombre();
-                personalyRoles.getSegundoNombre();
-                personalyRoles.getApellidoPaterno();
-                personalyRoles.getApellidoMaterno();
-                personalyRoles.getTelefono();
-                personalyRoles.getCorreo();
-                personalyRoles.getDireccion();
-                this.personalyRolesServices.setIdPersonal(personalyRoles);
-                return personalyRoles;
-        }
-        /*pasa del model -> dto -> mapper -> controller termina siendo subido a la base de datos. es para Actualizar los datos. 
-        al ser un metodo que actualiza necesita si o si el dato identificador(id en este caso) y dentro del argumento, debiamos llamar al @PathVariable(id)*/
-        @PutMapping("/{id}")
-        public PersonalyRoles updatePersonalyRolesUpdate(
-                @PathVariable("id") int id,
-                @RequestBody UpdatePersonalyRolesRequest UpdatePersonal) {
-                PersonalyRoles personalyRoles = PersonalyRolesMapper.toPersonalyRolesUpdate(id, UpdatePersonal); //Argumentamos con los dos valores importantes
-                personalyRoles.getId();
-                personalyRoles.getIdPersonal();
-                personalyRoles.getRut();
-                personalyRoles.getDv();
-                personalyRoles.getEspecialidad();
-                personalyRoles.getPrimerNombre();
-                personalyRoles.getSegundoNombre();
-                personalyRoles.getApellidoPaterno();
-                personalyRoles.getApellidoMaterno();
-                personalyRoles.getTelefono();
-                personalyRoles.getCorreo();
-                personalyRoles.getDireccion();
-                this.personalyRolesServices.setIdPersonal(personalyRoles);
-                return personalyRoles;
-        }
-        //System.err.println(); Sirve solo para debuggear
-        //borrar por id
+        //eliminar
         @DeleteMapping("/{id}")
-        public ResponseEntity<String> borrarPersonalyRoles(@PathVariable Integer id){
-                PersonalyRolesServices.borrarIdPersonal(id);
+        public ResponseEntity<Void> deleteAlimentacion(@PathVariable Integer id) {
+                personalyRolesSer.deleteIdPersonalyRoles(id);
                 return ResponseEntity.noContent().build();
-        }       
+        }
+        //crear
+        @PostMapping
+        public ResponseEntity<?> crearAlimentacion(@Valid @RequestBody CreatePersonalyRolesRequest CreatePersonal, BindingResult result) {
+                
+                if (result.hasErrors()) {
+                Map<String, String> errores = new HashMap<>();
+                result.getFieldErrors().forEach(error -> 
+                        errores.put(error.getField(), error.getDefaultMessage())
+                );
+                return new ResponseEntity<>(errores, HttpStatus.BAD_REQUEST);
+                }
+                PersonalyRoles personal = PersonalyRolesMapper.toPersonalyRolesCreate(CreatePersonal);
+                PersonalyRoles guardar = personalyRolesSer.setPersonalyRoles(personal);
+                
+                return ResponseEntity.status(HttpStatus.CREATED).body(guardar);
+        }
+        //actualizar
+         @PutMapping("/{id}")
+        public ResponseEntity<?> actualizarCriadero(
+                @PathVariable Integer id,
+                @Valid @RequestBody UpdatePersonalyRolesRequest updatePersonal, BindingResult result) {
+
+                if (result.hasErrors()) {
+                Map<String, String> errores = new HashMap<>();
+                result.getFieldErrors().forEach(error -> 
+                        errores.put(error.getField(), error.getDefaultMessage())
+                );
+                return new ResponseEntity<>(errores, HttpStatus.BAD_REQUEST);
+                }
+
+                // MAGIA DEL MAPPER: Convierte el DTO validado al modelo de la BD
+                PersonalyRoles personal = PersonalyRolesMapper.toPersonalyRolesUpdate(id, updatePersonal);
+                PersonalyRoles actualizado = personalyRolesSer.updatePersonalyRoles(personal);
+
+                return ResponseEntity.ok(actualizado);
+        }
+
+          
 
 }
