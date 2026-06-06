@@ -36,4 +36,8 @@ public class PersonalyRolesServices {
     public void deleteIdPersonalyRoles(int id) {
         PersonalRepo.deleteById(id);
     }
+    //filtrar especialidad
+    public List<PersonalyRoles> filtrarPorEspecialidad(String especialidad) {
+        return PersonalRepo.findByEspecialidad(especialidad);
+    }
 }

@@ -79,7 +79,14 @@ public class PersonalyRolesController {
 
                 return ResponseEntity.ok(actualizado);
         }
-
-          
-
+        //filtrar por especialidad
+        @GetMapping("/filtrar")
+        public ResponseEntity<List<PersonalyRoles>> getPersonalPorEspecialidad(
+                @RequestParam String especialidad) {
+                List<PersonalyRoles> resultados = personalyRolesSer.filtrarPorEspecialidad(especialidad);
+                if (resultados.isEmpty()) {
+                return ResponseEntity.noContent().build();
+                }
+                return ResponseEntity.ok(resultados);
+        }
 }
