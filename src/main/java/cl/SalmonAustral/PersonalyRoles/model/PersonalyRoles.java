@@ -18,9 +18,6 @@ public class PersonalyRoles {
     @Column(name="id")
     private int id;
 
-    @Column(name="idPersonal",nullable=false, length = 20)
-    private int idPersonal;
-
     @Column(name="rut",nullable=false, length = 8)
     private int rut;
 
@@ -55,23 +52,13 @@ public class PersonalyRoles {
     public int getId() {
         return id;
     }
-
     public void setId(int id) {
         this.id = id;
     }
-    
-    public int getIdPersonal() {
-        return idPersonal;
-    }
 
-    public void setIdPersonal(int idPersonal) {
-        this.idPersonal = idPersonal;
-    }
-    
     public int getRut() {
         return rut;
     }
-
     public void setRut(int rut) {
         this.rut = rut;
     }
@@ -79,7 +66,6 @@ public class PersonalyRoles {
     public String getDv() {
         return dv;
     }
-
     public void setDv(String dv) {
         this.dv = dv;
     }
@@ -87,7 +73,6 @@ public class PersonalyRoles {
     public String getEspecialidad() {
         return especialidad;
     }
-
     public void getEspecialidad(String especialidad) {
         this.especialidad = especialidad;
     }
@@ -95,7 +80,6 @@ public class PersonalyRoles {
     public String getPrimerNombre() {
         return primerNombre;
     }
-
     public void setPrimerNombre(String primerNombre) {
         this.primerNombre = primerNombre;
     }
@@ -103,7 +87,6 @@ public class PersonalyRoles {
     public String getSegundoNombre() {
         return segundoNombre;
     }
-
     public void setSegundoNombre(String segundoNombre) {
         this.segundoNombre = segundoNombre;
     }
@@ -111,7 +94,6 @@ public class PersonalyRoles {
     public String getApellidoPaterno() {
         return apellidoPaterno;
     }
-
     public void setApellidoPaterno(String apellidoPaterno) {
         this.apellidoPaterno = apellidoPaterno;
     }
@@ -119,7 +101,6 @@ public class PersonalyRoles {
     public String getApellidoMaterno() {
         return apellidoMaterno;
     }
-
     public void setApellidoMaterno(String apellidoMaterno) {
         this.apellidoMaterno = apellidoMaterno;
     }
@@ -127,21 +108,18 @@ public class PersonalyRoles {
     public String getTelefono() {
         return telefono;
     }
-
     public void setTelefono(String telefono) {
         this.telefono = telefono;
     }
     public String getCorreo() {
         return correo;
     }
-
     public void setCorreo(String correo) {
         this.correo = correo;
     }
     public String getDireccion() {
         return direccion;
     }
-
     public void setDireccion(String direccion) {
         this.direccion = direccion;
     }
