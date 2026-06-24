@@ -11,4 +11,6 @@ import org.springframework.stereotype.Repository;
 public interface PersonalyRolesRepository extends JpaRepository<PersonalyRoles, Integer> {
     List<PersonalyRoles> findByEspecialidad(String especialidad);
 
+    List<PersonalyRoles> findByRutAndDvAndPrimerNombre(int rut, String dv, String primerNombre);
+
 }

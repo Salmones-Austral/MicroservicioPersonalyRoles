@@ -16,6 +16,7 @@ import cl.SalmonAustral.PersonalyRoles.services.PersonalyRolesServices;
 
 import jakarta.validation.Valid;
 
+
 @RestController
 @RequestMapping("/api/v1/PersonalyRoles")
 public class PersonalyRolesController {
@@ -82,4 +83,18 @@ public class PersonalyRolesController {
                 }
                 return ResponseEntity.ok(resultados);
         }
+        @PostMapping("/login")
+        public ResponseEntity<?> inicioSesion(@RequestBody LoginRequest loginRequest) {
+                boolean exito = personalyRolesSer.login(loginRequest.getRut(), loginRequest.getDv(), loginRequest.getPrimerNombre());
+                if (exito) {
+                        Map<String, String> respuesta = new HashMap<>();
+                        respuesta.put("mensaje", "Inicio de sesión exitoso. Bienvenido " + loginRequest.getPrimerNombre());
+                        return ResponseEntity.ok(respuesta);
+                } else {
+                        Map<String, String> error = new HashMap<>();
+                        error.put("error", "Error al inicio de sesion. El RUT, el DIGITO VERIFICADOR o el NOMBRE no coinciden.");
+                        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(error);
+                }
+        }
+        
 }

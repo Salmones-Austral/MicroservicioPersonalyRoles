@@ -44,4 +44,9 @@ public class PersonalyRolesServices {
     public List<PersonalyRoles> filtrarPorEspecialidad(String especialidad) {
         return personalRepo.findByEspecialidad(especialidad);
     }
+
+    public boolean login(int rut, String dv, String primerNombre){
+        List<PersonalyRoles> result = personalRepo.findByRutAndDvAndPrimerNombre(rut, dv, primerNombre);
+        return !result.isEmpty();
+    }
 }
