@@ -4,9 +4,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Positive;
 
 public record UpdatePersonalyRolesRequest (
-    @Positive(message = "El id del personal no puede estar vacío")
-    int idPersonal,
-
     @Positive(message = "El rut no puede estar vacío")
     int rut,
 
