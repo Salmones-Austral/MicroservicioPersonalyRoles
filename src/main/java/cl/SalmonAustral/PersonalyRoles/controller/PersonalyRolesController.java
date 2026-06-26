@@ -18,7 +18,7 @@ import jakarta.validation.Valid;
 
 
 @RestController
-@RequestMapping("/api/v1/PersonalyRoles")
+@RequestMapping("/api/v1/personalyRoles")
 public class PersonalyRolesController {
 
         private final PersonalyRolesServices personalyRolesSer;
