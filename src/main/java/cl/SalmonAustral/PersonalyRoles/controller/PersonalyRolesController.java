@@ -3,6 +3,7 @@ package cl.SalmonAustral.PersonalyRoles.controller;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.List;
+import java.util.ArrayList; // <-- IMPORTANTE: Agregado para la lista temporal de alertas
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,6 +23,9 @@ import jakarta.validation.Valid;
 public class PersonalyRolesController {
 
         private final PersonalyRolesServices personalyRolesSer;
+
+        // Lista en memoria para guardar las alertas que lleguen desde el microservicio de Alertas
+        private final List<Map<String, Object>> buzonAlertasVeterinario = new ArrayList<>();
 
         public PersonalyRolesController(PersonalyRolesServices personalyRolesSer) {
                 this.personalyRolesSer = personalyRolesSer;
@@ -97,4 +101,24 @@ public class PersonalyRolesController {
                 }
         }
         
+        // =================================================================================
+        // NUEVOS MÉTODOS PARA RECIBIR LA ALERTA ASÍNCRONA DE MORTALIDAD (HISTORIA JORGE)
+        // =================================================================================
+        
+        // 1. EL ENDPOINT POST: El microservicio de Alertas llamará aquí en segundo plano
+        @PostMapping("/notificar")
+        public ResponseEntity<Void> recibirAlertaVeterinario(@RequestBody Map<String, Object> payload) {
+                System.out.println("🚨 [ALERTA RECIBIDA EN PUERTO MONTT] Notificando al veterinario: " + payload);
+                
+                // Guardamos el mensaje en nuestra lista temporal
+                buzonAlertasVeterinario.add(payload);
+                
+                return ResponseEntity.ok().build();
+        }
+
+        // 2. EL ENDPOINT GET: en Postman para verificar que el mensaje llegó
+        @GetMapping("/ver-alertas")
+        public ResponseEntity<List<Map<String, Object>>> revisarBuzonAlertas() {
+                return ResponseEntity.ok(buzonAlertasVeterinario);
+        }
 }
